@@ -13,7 +13,9 @@ namespace MonogameTest
         SpriteBatch spriteBatch;
 
         Texture2D smileyImage;
+        Texture2D smileyBlinkImage;
         Vector2 smileyPosition;
+        Texture2D curSmileyImage;
 
         public Game1()
         {
@@ -45,6 +47,8 @@ namespace MonogameTest
             spriteBatch = new SpriteBatch(GraphicsDevice);
             //loads smiley.png into smileyImage
             smileyImage = Content.Load<Texture2D>("smiley");
+            smileyBlinkImage = Content.Load<Texture2D>("smileyBlink");
+            curSmileyImage = smileyImage;
             // TODO: use this.Content to load your game content here
         }
 
@@ -90,6 +94,15 @@ namespace MonogameTest
                 smileyPosition.X += speed * time;
 
             }
+
+            if (state.IsKeyDown(Keys.Space))
+            {
+                curSmileyImage = smileyBlinkImage;
+            }
+            if (state.IsKeyUp(Keys.Space))
+            {
+                curSmileyImage = smileyImage;
+            }
             base.Update(gameTime);
         }
 
@@ -103,7 +116,8 @@ namespace MonogameTest
 
             //draw our sprite
             spriteBatch.Begin();
-            spriteBatch.Draw(smileyImage, smileyPosition, Color.White);
+            spriteBatch.Draw(curSmileyImage, smileyPosition, null, Color.White, 0f,Vector2.Zero, 0.25f, SpriteEffects.None, 0f);
+            //spriteBatch.Draw(smileyImage, smileyPosition, Color.White);
 
             spriteBatch.End();
             base.Draw(gameTime);

@@ -1,7 +1,9 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using System.Threading;
 //CTRL H is api
+//ctrl .
 namespace MonogameTest
 {
     /// <summary>
@@ -16,6 +18,12 @@ namespace MonogameTest
         Texture2D smileyBlinkImage;
         Vector2 smileyPosition;
         Texture2D curSmileyImage;
+
+        Thread mainThread;
+        MonogameTestMain.MonogameTestMain main;
+        MonoResponder responder;
+
+        public Color BackgroundColor { get; set; } = Color.HotPink;
 
         public Game1()
         {
@@ -49,9 +57,18 @@ namespace MonogameTest
             smileyImage = Content.Load<Texture2D>("smiley");
             smileyBlinkImage = Content.Load<Texture2D>("smileyBlink");
             curSmileyImage = smileyImage;
-            // TODO: use this.Content to load your game content here
+
+            main = new MonogameTestMain.MonogameTestMain();
+            responder = new MonoResponder(this);
+            mainThread = new Thread(new ThreadStart(mainThreadStart));
+            mainThread.Start();
         }
 
+        void mainThreadStart()
+        {
+            main.Run(responder);
+
+        }
         /// <summary>
         /// UnloadContent will be called once per game and is the place to unload
         /// game-specific content.
@@ -112,7 +129,7 @@ namespace MonogameTest
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Draw(GameTime gameTime)
         {
-            GraphicsDevice.Clear(Color.LightPink);
+            GraphicsDevice.Clear(BackgroundColor);
 
             //draw our sprite
             spriteBatch.Begin();

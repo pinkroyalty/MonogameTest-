@@ -1,7 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-
+//CTRL H is api
 namespace MonogameTest
 {
     /// <summary>
@@ -11,6 +11,9 @@ namespace MonogameTest
     {
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
+
+        Texture2D smileyImage;
+        Vector2 smileyPosition;
 
         public Game1()
         {
@@ -26,8 +29,9 @@ namespace MonogameTest
         /// </summary>
         protected override void Initialize()
         {
-            // TODO: Add your initialization logic here
-
+            // set the starting position
+            //smileyPosition = new Vector2(0.0f, 0.0f);
+            smileyPosition = Vector2.Zero;
             base.Initialize();
         }
 
@@ -39,7 +43,8 @@ namespace MonogameTest
         {
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
-
+            //loads smiley.png into smileyImage
+            smileyImage = Content.Load<Texture2D>("smiley");
             // TODO: use this.Content to load your game content here
         }
 
@@ -61,9 +66,30 @@ namespace MonogameTest
         {
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
-
+            float time = (float)gameTime.ElapsedGameTime.TotalSeconds;
+            float speed = 100.0f;
             // TODO: Add your update logic here
+            KeyboardState state = Keyboard.GetState();
+            if (state.IsKeyDown(Keys.Down))
+            {
+                smileyPosition.Y += speed * time;
 
+            }
+            if (state.IsKeyDown(Keys.Up))
+            {
+                smileyPosition.Y -= speed * time;
+
+            }
+            if (state.IsKeyDown(Keys.Left))
+            {
+                smileyPosition.X -= speed * time;
+
+            }
+            if (state.IsKeyDown(Keys.Right))
+            {
+                smileyPosition.X += speed * time;
+
+            }
             base.Update(gameTime);
         }
 
@@ -73,10 +99,13 @@ namespace MonogameTest
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Draw(GameTime gameTime)
         {
-            GraphicsDevice.Clear(Color.CornflowerBlue);
+            GraphicsDevice.Clear(Color.LightPink);
 
-            // TODO: Add your drawing code here
+            //draw our sprite
+            spriteBatch.Begin();
+            spriteBatch.Draw(smileyImage, smileyPosition, Color.White);
 
+            spriteBatch.End();
             base.Draw(gameTime);
         }
     }
